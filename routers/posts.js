@@ -9,7 +9,7 @@ router.get('/', postsController.index)
 router.get('/:id', postsController.show)
 //show
 
-router.post('/', postsController.create)
+router.post('/', postsController.store)
 //create
 
 router.put('/:id', postsController.update)

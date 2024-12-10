@@ -17,7 +17,7 @@ const index = (req, res) => {
 }
 
 const show = (req, res) => {
-    const postId = req.params.id
+    const postId = parseInt(req.params.id)
     const myPost = postsList.find((post) => post.id === postId)
     if (myPost === undefined) {
         res.statusCode = 404
@@ -28,25 +28,38 @@ const show = (req, res) => {
     } else { res.json(myPost) }
 }
 
-const create = (req, res) => {
-    res.json('Crea un nuovo post')
+const store = (req, res) => {
+    const newPost = req.body;
+    // console.log(req.body)
+    // res.json("Dati ricevuti")
+    newPost.id = postsList[postsList.length - 1].id + 1
+    postsList.push(newPost)
+    res.statusCode = 201
+    res.json(newPost)
 }
 
 const update = (req, res) => {
-    const postId = req.params.id
-    const myPost = postsList.find((post) => post.id === postId)
-    if (myPost === undefined) {
-        res.statusCode = 404
-        res.json({
-            error: 'Not found',
-            message: 'Il post non è stato trovato'
+    const postId = parseInt(req.params.id)
+    const newData = req.body
+    const postIndex = postsList.findIndex((post) => post.id === postId)
+    if (postIndex === -1) {
+        return res.status(404).json({
+            error: "Not found",
+            message: "Il post non è stato trovato"
         })
-    } else { res.json(`Modifica l'intero contenuto del post con ID numero ${postId}`) }
-
+    } else {
+        postsList[postIndex] = {
+            ...postsList[postIndex],
+            ...newData,
+            id: postId
+        }
+        res.json(postsList[postIndex])
+        console.log(postsList)
+    }
 }
 
 const destroy = (req, res) => {
-    const postId = req.params.id
+    const postId = parseInt(req.params.id)
     const myPost = postsList.find((post) => post.id === postId)
     const myPostIndex = postsList.findIndex((post) => post.id === postId)
     if (myPost === undefined) {
@@ -65,7 +78,7 @@ const destroy = (req, res) => {
 module.exports = {
     index,
     show,
-    create,
+    store,
     update,
     destroy
 }

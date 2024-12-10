@@ -3,6 +3,7 @@ const app = express()
 const port = 3000
 const posts = require('./data/posts.js')
 const router = require('./routers/posts.js')
+const handleError = require('./middlewares/handleError.js')
 app.use(express.json());
 app.use(express.static('public'))
 app.use('/post', router)
@@ -18,5 +19,6 @@ app.get ('/bacheca', (req, res) => {
     })
 })
 
+app.use(handleError)
 
 app.listen(port, () => {})
